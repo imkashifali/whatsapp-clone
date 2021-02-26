@@ -2,18 +2,18 @@
   scroll-snap-type: y mandatory;
 }
 .app {
-  height: 150vh;
-  background-color: black;
+  height: 100vh;
+  background-color: white;
   display: grid;
   place-items: center;
 }
 .app__videos {
   position: relative;
-  height: 600px;
+  height: 800px;
   overflow: scroll;
   border-radius: 20px;
   width: 80%;
-  max-width: 300px;
+  max-width: 500px;
   scroll-snap-type: y mandatory;
 }
 

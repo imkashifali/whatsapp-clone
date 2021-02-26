@@ -1,13 +1,21 @@
 import React, { useRef, useState } from "react";
 import "./Video.css";
 import VideoFooter from "./VideoFooter";
+import VideoSidebar from "./VideoSidebar";
 
-const Video = () => {
+const Video = ({
+  url,
+  channel,
+  description,
+  song,
+  likes,
+  messages,
+  shares,
+}) => {
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef(null);
 
   const OnVideoPress = () => {
-    videoRef.current.play();
     if (playing) {
       videoRef.current.pause();
       setPlaying(false);
@@ -22,11 +30,13 @@ const Video = () => {
       <video
         className="video__player"
         loop
-        ref={videoRef}
         onClick={OnVideoPress}
-        src="https://v16m.tiktokcdn.com/dae3950ac55218621d69699b8fa1dd9f/60132cef/video/tos/alisg/tos-alisg-pve-0037c001/dca27f35799e4c95bfba6a1b46a95063/?a=1233&br=5618&bt=2809&cd=0%7C0%7C1&ch=0&cr=0&cs=0&cv=1&dr=0&ds=3&er=&l=202101281530080101151531630217E92F&lr=tiktok_m&mime_type=video_mp4&pl=0&qs=0&rc=M291O215ZThseDMzOjczM0ApPDlkOmc3NDs6NzRlZ2Y4ZmcvX3JyZ2xtXmhfLS1jMTRzc2ItM2MxL2M0Yi01NjQ0YDQ6Yw%3D%3D&vl=&vr="
+        ref={videoRef}
+        // src="https://v77.tiktokcdn.com/e2c8d882e3ea5dbe684717f708094c99/60381506/video/tos/alisg/tos-alisg-pve-0037c001/7ef0a17eeb384e79bfaea876372abd9b/?a=1233&br=988&bt=494&cd=0%7C0%7C1&ch=0&cr=0&cs=0&cv=1&dr=0&ds=3&er=&l=2021022515220301011507909706160FCF&lr=tiktok_m&mime_type=video_mp4&pl=0&qs=0&rc=M255bjd5M3dzMzMzOzczM0ApZzdoO2RmOmVlNzxmOTM2N2dtL2VuMDVmY29gLS01MTRzc2E2LzQ0MTUtNGMzMjE0MTY6Yw%3D%3D&vl=&vr="
+        src={url}
       ></video>
-      <VideoFooter />
+      <VideoFooter channel={channel} description={description} song={song} />
+      <VideoSidebar likes={likes} messages={messages} shares={shares} />.
     </div>
   );
 };
