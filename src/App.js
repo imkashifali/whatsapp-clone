@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./App.css";
-import Video from "./Video";
-import db from "./firebase";
+import Header from "./Header.js";
+import SideBar from "./SideBar.js";
+import RecommendedVideos from "./RecommendedVideos";
+import SearchPage from "./SearchPage.js";
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
 function App() {
-  const [videos, setvideos] = useState([]);
-
-  useEffect(() => {
-    db.collection("videos").onSnapshot((snapshot) =>
-      setvideos(snapshot.docs.map((doc) => doc.data()))
-    );
-  }, []);
-
   return (
     <div className="app">
-      <div className="app__videos">
-        {videos.map(
-          ({ url, channel, description, song, likes, messages, shares }) => (
-            <Video
-              url={url}
-              channel={channel}
-              description={description}
-              song={song}
-              likes={likes}
-              messages={messages}
-              shares={shares}
-            />
-          )
-        )}
-      </div>
+      <Router>
+        <Header />
+
+        <Switch>
+          <Route path="/search/:searchTerm">
+            <div className="app__page">
+              <SideBar />
+              <SearchPage />
+            </div>
+          </Route>
+          <Route path="/">
+            <div className="app__page">
+              <SideBar />
+              <RecommendedVideos />
+            </div>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }
