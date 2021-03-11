@@ -1,15 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Sidebar from "./Sidebar.js";
-import Feed from "./Feed.js";
-import Widgets from "./Widgets.js";
+import Chat from "./Chat.js";
+import Login from "./Login.js";
 
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {useStateValue} from "./StateProvider.js"
 function App() {
+  const [{user}, dispatch] = useStateValue(null);
+
   return (
     <div className="app">
-      <Sidebar />
-      <Feed />
-      <Widgets />
+      {!user ? (
+        <Login />
+      ) : (
+        <div className="app__body">
+          <Router>
+            <Sidebar />
+
+            <Switch>
+              <Route path="/rooms/:roomId">
+                <Chat />
+              </Route>
+
+              <Route path="/">
+                <Chat />
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      )}
     </div>
   );
 }

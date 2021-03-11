@@ -1,34 +1,67 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Sidebar.css";
-import SidebarOption from "./SidebarOption.js";
-import TwitterIcon from "@material-ui/icons/Twitter";
-import HomeIcon from "@material-ui/icons/Home";
+import SettingsIcon from "@material-ui/icons/Settings";
+import DonutLargeIcon from "@material-ui/icons/DonutLarge";
+import { Avatar, IconButton } from "@material-ui/core";
+import ChatIcon from "@material-ui/icons/Chat";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import Button from "@material-ui/core/Button";
+import SidebarChat from "./SidebarChat";
+import db from "./firebase.js";
+import { useStateValue } from "./StateProvider.js";
 
 const Sidebar = () => {
+  const [rooms, setRooms] = useState([]);
+  const [{ user }, dispatch] = useStateValue();
+
+  useEffect(() => {
+    const unSubscribe = db.collection("rooms").onSnapshot((snapshot) =>
+      setRooms(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      )
+    );
+    return () => {
+      unSubscribe();
+    };
+  }, []);
+
   return (
     <div className="sidebar">
-      <TwitterIcon className="sidebar__twitterIcon" />
+      <div className="sidebar__header">
+        <IconButton>
+          {/* <Avatar src="https://yt3.ggpht.com/yti/ANoDKi6wAT4Dsm0xV1sOMpJlYDY4GNcWOUPVU246j4VxyA=s88-c-k-c0x00ffffff-no-rj-mo" /> */}
+          <Avatar src={user?.photoURL} />
+        </IconButton>
 
-      <SidebarOption Icon={HomeIcon} text="Home" />
-      <SidebarOption Icon={SearchIcon} text="Explore" />
-      <SidebarOption Icon={NotificationsIcon} text="Notification" />
-      <SidebarOption Icon={MailOutlineIcon} text="Message" />
-      <SidebarOption Icon={BookmarkBorderIcon} text="Bookmarks" />
-      <SidebarOption Icon={ListAltIcon} text="Lists" />
-      <SidebarOption Icon={PermIdentityIcon} text="Profile" />
-      <SidebarOption Icon={MoreHorizIcon} text="More" />
+        <div className="sidebar__headerRight">
+          <IconButton>
+            <DonutLargeIcon />
+          </IconButton>
 
-      <Button variant="contained" className="sidebar__tweet" fullWidth>
-        Tweet
-      </Button>
+          <IconButton>
+            <ChatIcon />
+          </IconButton>
+
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        </div>
+      </div>
+      <div className="sidebar__search">
+        <div className="sidebar__searchContainer">
+          <SearchIcon />
+          <input type="text" placeholder="Search or start New chat" />
+        </div>
+      </div>
+      <div className="sidebar__chats">
+        <SidebarChat addNewChat />
+        {rooms.map((room) => (
+          <SidebarChat key={room.id} id={room.id} name={room.data.name} />
+        ))}
+      </div>
     </div>
   );
 };
